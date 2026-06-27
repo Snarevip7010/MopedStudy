@@ -937,6 +937,691 @@ export const questions: Question[] = [
     tags: ["hazard-prediction", "parked-car", "door"],
     isHazardPrediction: true,
   },
+  {
+    id: "traffic-signs-008",
+    category: "Traffic Signs",
+    japanese:
+      "車両通行止めの標識がある道路では、原付も通行してはいけない。",
+    naturalEnglish:
+      "A moped must not use a road with a Closed to Vehicles sign.",
+    examLikeEnglish:
+      "A moped shall not proceed on a road where a Closed to Vehicles sign is displayed.",
+    answer: true,
+    explanationJa:
+      "車両通行止めの標識は原付にも適用されます。",
+    explanationEn:
+      "A Closed to Vehicles sign applies to mopeds too.",
+    difficulty: 1,
+    tags: ["closed-to-vehicles", "signs"],
+  },
+  {
+    id: "traffic-signs-009",
+    category: "Traffic Signs",
+    japanese:
+      "追越し禁止の標識がある場所でも、前の車が遅ければ必ず追い越してよい。",
+    naturalEnglish:
+      "At a No Overtaking sign, you may always pass a slow vehicle.",
+    examLikeEnglish:
+      "Where a No Overtaking sign is posted, a moped may always overtake a slow vehicle.",
+    answer: false,
+    explanationJa:
+      "追越し禁止の場所では、前の車が遅くても無理な追越しはできません。",
+    explanationEn:
+      "A slow vehicle does not cancel a No Overtaking sign.",
+    difficulty: 2,
+    tags: ["no-overtaking", "signs", "trick"],
+  },
+  {
+    id: "traffic-signs-010",
+    category: "Traffic Signs",
+    japanese:
+      "すべりやすい道路の警戒標識がある場所では、急なハンドルや急ブレーキを避ける。",
+    naturalEnglish:
+      "At a Slippery Road sign, avoid sudden steering and hard braking.",
+    examLikeEnglish:
+      "Where a Slippery Road warning sign is displayed, a rider should avoid sudden steering and sudden braking.",
+    answer: true,
+    explanationJa:
+      "すべりやすい場所では、急な操作で転倒しやすくなります。",
+    explanationEn:
+      "Sudden actions can make the moped slip.",
+    difficulty: 1,
+    tags: ["slippery-road", "signs", "safe-speed"],
+  },
+  {
+    id: "traffic-signs-011",
+    category: "Traffic Signs",
+    japanese:
+      "指定方向外進行禁止の標識があっても、青信号なら好きな方向へ進んでよい。",
+    naturalEnglish:
+      "If the signal is green, you may go any direction even with a direction sign.",
+    examLikeEnglish:
+      "When the signal is green, a moped may proceed in any direction even if a mandatory direction sign is posted.",
+    answer: false,
+    explanationJa:
+      "青信号でも、進行方向を指定する標識には従います。",
+    explanationEn:
+      "A green light does not override direction signs.",
+    difficulty: 2,
+    tags: ["direction-sign", "traffic-light", "signs"],
+  },
+  {
+    id: "traffic-signs-012",
+    category: "Traffic Signs",
+    japanese:
+      "学校や幼稚園などが近いことを示す標識がある場所では、子どもの飛び出しを予測する。",
+    naturalEnglish:
+      "Near a school warning sign, expect children to enter the road.",
+    examLikeEnglish:
+      "Where a school or children warning sign is displayed, a rider should anticipate children entering the roadway.",
+    answer: true,
+    explanationJa:
+      "子どもは急に道路へ出てくることがあるため、注意して走ります。",
+    explanationEn:
+      "Children may move suddenly, so be ready to slow down.",
+    difficulty: 1,
+    tags: ["school-zone", "children", "signs"],
+  },
+  {
+    id: "traffic-signs-013",
+    category: "Traffic Signs",
+    japanese:
+      "一時停止の標識は、見通しがよい交差点では守らなくてもよい。",
+    naturalEnglish:
+      "You may ignore a Stop sign at an intersection with good visibility.",
+    examLikeEnglish:
+      "A Stop sign need not be obeyed when visibility at the intersection is good.",
+    answer: false,
+    explanationJa:
+      "見通しがよくても、一時停止の標識があれば完全に停止します。",
+    explanationEn:
+      "A Stop sign requires a complete stop even when visibility is good.",
+    difficulty: 1,
+    tags: ["stop-sign", "signs", "trick"],
+  },
+  {
+    id: "stop-slow-001",
+    category: "Stop and Slow Down",
+    japanese:
+      "停止線がない一時停止の場所では、交差点の直前で停止する。",
+    naturalEnglish:
+      "If there is no stop line, stop just before the intersection.",
+    examLikeEnglish:
+      "At a stop location without a stop line, a rider shall stop immediately before entering the intersection.",
+    answer: true,
+    explanationJa:
+      "停止線がないときは、交差点に入る直前で止まります。",
+    explanationEn:
+      "Without a stop line, stop before entering the intersection.",
+    difficulty: 1,
+    tags: ["stop-sign", "stop-line", "intersection"],
+  },
+  {
+    id: "stop-slow-002",
+    category: "Stop and Slow Down",
+    japanese:
+      "徐行とは、歩くくらいの速度なら必ずよいという意味である。",
+    naturalEnglish:
+      "Driving slowly always means any walking-speed pace is OK.",
+    examLikeEnglish:
+      "Slow driving always means that any speed similar to walking speed is sufficient.",
+    answer: false,
+    explanationJa:
+      "徐行は、危険があればすぐ止まれる速度で進むことです。",
+    explanationEn:
+      "Slow driving means you can stop immediately if needed.",
+    difficulty: 1,
+    tags: ["slow-down", "safe-speed", "trick"],
+  },
+  {
+    id: "stop-slow-003",
+    category: "Stop and Slow Down",
+    japanese:
+      "歩道を横切って道路外の施設へ入るときは、歩道の直前で一時停止する。",
+    naturalEnglish:
+      "Before crossing a sidewalk to enter a place off the road, stop first.",
+    examLikeEnglish:
+      "When crossing a sidewalk to enter premises outside the road, a moped rider shall stop immediately before the sidewalk.",
+    answer: true,
+    explanationJa:
+      "歩道を横切るときは、歩行者を妨げないよう一時停止します。",
+    explanationEn:
+      "Stop first and do not obstruct pedestrians on the sidewalk.",
+    difficulty: 2,
+    tags: ["sidewalk", "stop", "pedestrian"],
+  },
+  {
+    id: "stop-slow-004",
+    category: "Stop and Slow Down",
+    japanese:
+      "見通しの悪い曲がり角では、標識がなくても徐行して安全確認をする。",
+    naturalEnglish:
+      "At a blind corner, slow down and check even if there is no sign.",
+    examLikeEnglish:
+      "At a curve or corner with poor visibility, a rider should slow down and confirm safety even if no sign is posted.",
+    answer: true,
+    explanationJa:
+      "見えにくい場所では、標識の有無にかかわらず危険を予測します。",
+    explanationEn:
+      "Poor visibility requires extra caution even without a sign.",
+    difficulty: 2,
+    tags: ["blind-corner", "slow-down", "visibility"],
+  },
+  {
+    id: "stop-slow-005",
+    category: "Stop and Slow Down",
+    japanese:
+      "一時停止の場所では、前の車が止まって進んだ直後なら自分は止まらなくてもよい。",
+    naturalEnglish:
+      "At a stop sign, you do not need to stop if the vehicle ahead already stopped.",
+    examLikeEnglish:
+      "At a designated stop location, a moped rider need not stop when the preceding vehicle has already stopped.",
+    answer: false,
+    explanationJa:
+      "前の車が止まっていても、自分の原付も必ず一時停止します。",
+    explanationEn:
+      "Each rider must make their own complete stop.",
+    difficulty: 1,
+    tags: ["stop-sign", "following", "trick"],
+  },
+  {
+    id: "pedestrian-001",
+    category: "Pedestrian Protection",
+    japanese:
+      "横断歩道を渡っている歩行者がいるときは、その通行を妨げてはいけない。",
+    naturalEnglish:
+      "If a pedestrian is crossing at a crosswalk, you must not block them.",
+    examLikeEnglish:
+      "When a pedestrian is crossing at a crosswalk, a moped rider shall not obstruct the pedestrian's passage.",
+    answer: true,
+    explanationJa:
+      "横断歩道では歩行者の安全を優先します。",
+    explanationEn:
+      "Pedestrians at a crosswalk have priority.",
+    difficulty: 1,
+    tags: ["crosswalk", "pedestrian", "priority"],
+  },
+  {
+    id: "pedestrian-002",
+    category: "Pedestrian Protection",
+    japanese:
+      "横断歩道の近くに歩行者がいても、まだ渡り始めていなければ速度を落とす必要はない。",
+    naturalEnglish:
+      "If a pedestrian near a crosswalk has not started crossing, you do not need to slow down.",
+    examLikeEnglish:
+      "A rider need not reduce speed near a crosswalk unless the pedestrian has already started crossing.",
+    answer: false,
+    explanationJa:
+      "渡りそうな歩行者がいるときは、止まれるように注意して進みます。",
+    explanationEn:
+      "Be ready to stop when a pedestrian may cross.",
+    difficulty: 2,
+    tags: ["crosswalk", "pedestrian", "unless"],
+  },
+  {
+    id: "pedestrian-003",
+    category: "Pedestrian Protection",
+    japanese:
+      "歩行者に早く渡ってもらうために、警音器を鳴らして急がせてもよい。",
+    naturalEnglish:
+      "You may honk to make a pedestrian hurry across.",
+    examLikeEnglish:
+      "A rider may sound the horn to make a pedestrian hurry across the road.",
+    answer: false,
+    explanationJa:
+      "警音器で歩行者を急がせるのは危険です。歩行者を保護します。",
+    explanationEn:
+      "Do not pressure pedestrians. Protect them and wait.",
+    difficulty: 1,
+    tags: ["horn", "pedestrian", "crosswalk"],
+  },
+  {
+    id: "pedestrian-004",
+    category: "Pedestrian Protection",
+    japanese:
+      "歩行者の横を通るときは、安全な間隔をあけるか、徐行する。",
+    naturalEnglish:
+      "When passing a pedestrian, keep safe space or slow down.",
+    examLikeEnglish:
+      "When passing near pedestrians, a rider should keep a safe distance or proceed slowly.",
+    answer: true,
+    explanationJa:
+      "歩行者のそばでは、接触しないよう安全な間隔と速度を保ちます。",
+    explanationEn:
+      "Space and low speed help prevent contact with pedestrians.",
+    difficulty: 1,
+    tags: ["pedestrian", "safe-distance", "slow-down"],
+  },
+  {
+    id: "pedestrian-005",
+    category: "Pedestrian Protection",
+    japanese:
+      "歩行者が横断歩道を渡り終えた後も、周囲に他の歩行者がいないか確認してから進む。",
+    naturalEnglish:
+      "After one pedestrian finishes crossing, check for others before moving.",
+    examLikeEnglish:
+      "After a pedestrian has completed crossing, a rider should confirm that no other pedestrian is about to cross before proceeding.",
+    answer: true,
+    explanationJa:
+      "一人が渡り終えても、続いて渡る歩行者がいることがあります。",
+    explanationEn:
+      "Another pedestrian may start crossing right after.",
+    difficulty: 2,
+    tags: ["crosswalk", "pedestrian", "safety-check"],
+  },
+  {
+    id: "parking-004",
+    category: "Parking and Stopping",
+    japanese:
+      "横断歩道の上では、短時間の乗り降りだけなら停止してもよい。",
+    naturalEnglish:
+      "You may stop on a crosswalk for a quick pickup or drop-off.",
+    examLikeEnglish:
+      "Stopping on a crosswalk is permitted when it is only for a brief pickup or drop-off.",
+    answer: false,
+    explanationJa:
+      "横断歩道上で止まると、歩行者の通行を妨げます。",
+    explanationEn:
+      "Stopping on a crosswalk blocks pedestrians.",
+    difficulty: 1,
+    tags: ["crosswalk", "no-stopping", "parking"],
+  },
+  {
+    id: "parking-005",
+    category: "Parking and Stopping",
+    japanese:
+      "踏切の中では、電話を確認する短い時間でも停止してはいけない。",
+    naturalEnglish:
+      "You must not stop inside a railroad crossing, even for a short phone check.",
+    examLikeEnglish:
+      "A moped shall not stop within a railroad crossing even if the stop is brief.",
+    answer: true,
+    explanationJa:
+      "踏切内で停止すると、列車との事故につながる危険があります。",
+    explanationEn:
+      "Stopping on tracks is very dangerous.",
+    difficulty: 1,
+    tags: ["railroad", "no-stopping", "parking"],
+  },
+  {
+    id: "parking-006",
+    category: "Parking and Stopping",
+    japanese:
+      "消火栓の近くでも、エンジンをかけたままなら駐車してよい。",
+    naturalEnglish:
+      "Near a fire hydrant, parking is OK if the engine stays on.",
+    examLikeEnglish:
+      "Parking near a fire hydrant is permitted if the engine is kept running.",
+    answer: false,
+    explanationJa:
+      "消火活動の妨げになる場所には、エンジンの状態に関係なく駐車できません。",
+    explanationEn:
+      "Emergency access must stay clear, even if the engine is on.",
+    difficulty: 2,
+    tags: ["fire-hydrant", "parking", "emergency"],
+  },
+  {
+    id: "parking-007",
+    category: "Parking and Stopping",
+    japanese:
+      "交差点の中やすぐ近くでは、交通を妨げるおそれがあるため駐停車してはいけない。",
+    naturalEnglish:
+      "Do not stop or park in or very near an intersection.",
+    examLikeEnglish:
+      "A moped shall not stop or park within or immediately near an intersection where traffic may be obstructed.",
+    answer: true,
+    explanationJa:
+      "交差点付近で止まると、見通しや通行の妨げになります。",
+    explanationEn:
+      "Stopping near intersections can block views and traffic.",
+    difficulty: 2,
+    tags: ["intersection", "no-stopping", "parking"],
+  },
+  {
+    id: "parking-008",
+    category: "Parking and Stopping",
+    japanese:
+      "駐車が認められる場所でも、他の車両や歩行者の通行を妨げないようにする。",
+    naturalEnglish:
+      "Even where parking is allowed, do not block vehicles or pedestrians.",
+    examLikeEnglish:
+      "Even at a place where parking is permitted, a rider should not obstruct vehicles or pedestrians.",
+    answer: true,
+    explanationJa:
+      "駐車できる場所でも、周囲の交通を妨げないことが大切です。",
+    explanationEn:
+      "Allowed parking still must not obstruct traffic.",
+    difficulty: 1,
+    tags: ["parking", "pedestrian", "obstruction"],
+  },
+  {
+    id: "two-step-right-turn-008",
+    category: "Two-step Right Turn",
+    japanese:
+      "二段階右折では、向きを変えた後は前方の信号に従って進む。",
+    naturalEnglish:
+      "In a two-step right turn, after changing direction, follow the signal in front of you.",
+    examLikeEnglish:
+      "In a two-step right turn, after changing direction, a moped rider shall proceed according to the signal facing the rider.",
+    answer: true,
+    explanationJa:
+      "向きを変えた後は、新しく前方に見える信号に従います。",
+    explanationEn:
+      "After turning the moped, follow the signal now in front of you.",
+    difficulty: 2,
+    tags: ["two-step", "right-turn", "signal"],
+  },
+  {
+    id: "two-step-right-turn-009",
+    category: "Two-step Right Turn",
+    japanese:
+      "二段階右折をするときは、右折レーンへ移らず左側から交差点を直進する。",
+    naturalEnglish:
+      "For a two-step right turn, do not move into the right-turn lane; go straight from the left side.",
+    examLikeEnglish:
+      "When making a two-step right turn, a moped should proceed straight from the left side without entering the right-turn lane.",
+    answer: true,
+    explanationJa:
+      "二段階右折では、まず左側から交差点の向こう側へ直進します。",
+    explanationEn:
+      "The first step is to go straight from the left side.",
+    difficulty: 2,
+    tags: ["two-step", "right-turn-lane", "method"],
+  },
+  {
+    id: "two-step-right-turn-010",
+    category: "Two-step Right Turn",
+    japanese:
+      "二段階右折が必要な交差点でも、車が少ないときは小回り右折をしてよい。",
+    naturalEnglish:
+      "Where a two-step right turn is required, you may turn directly if traffic is light.",
+    examLikeEnglish:
+      "At an intersection where a two-step right turn is required, a moped may make a direct right turn when traffic is light.",
+    answer: false,
+    explanationJa:
+      "交通量が少なくても、二段階右折が必要な場所では二段階で右折します。",
+    explanationEn:
+      "Light traffic does not cancel a required two-step right turn.",
+    difficulty: 3,
+    tags: ["two-step", "direct-turn", "trick"],
+  },
+  {
+    id: "two-step-right-turn-011",
+    category: "Two-step Right Turn",
+    japanese:
+      "二段階右折で向きを変える場所では、他の交通の妨げにならない位置で停止する。",
+    naturalEnglish:
+      "When stopping to change direction in a two-step right turn, stop where you do not block traffic.",
+    examLikeEnglish:
+      "When stopping to change direction during a two-step right turn, a rider should stop at a position that does not obstruct other traffic.",
+    answer: true,
+    explanationJa:
+      "向きを変えるために止まるときも、交差点内の通行を妨げないようにします。",
+    explanationEn:
+      "Stop for the second step without blocking others.",
+    difficulty: 2,
+    tags: ["two-step", "stop", "obstruction"],
+  },
+  {
+    id: "hazard-007",
+    category: "Hazard Prediction",
+    japanese:
+      "駐車車両の陰から歩行者が出てくることを予測して、間隔をあけて通行する。",
+    naturalEnglish:
+      "Expect pedestrians to appear from behind parked cars and keep space.",
+    examLikeEnglish:
+      "A rider should anticipate pedestrians emerging from behind parked vehicles and keep a safe distance.",
+    answer: true,
+    explanationJa:
+      "駐車車両は歩行者を隠すことがあります。",
+    explanationEn:
+      "Parked vehicles can hide pedestrians.",
+    difficulty: 2,
+    tags: ["hazard-prediction", "parked-car", "pedestrian"],
+    isHazardPrediction: true,
+  },
+  {
+    id: "hazard-008",
+    category: "Hazard Prediction",
+    japanese:
+      "バス停付近では、バスの前後から人が出てくることを予測する。",
+    naturalEnglish:
+      "Near a bus stop, expect people to step out from around the bus.",
+    examLikeEnglish:
+      "Near a bus stop, a moped rider should anticipate pedestrians emerging from in front of or behind a bus.",
+    answer: true,
+    explanationJa:
+      "バスの陰から乗客や歩行者が出てくることがあります。",
+    explanationEn:
+      "A bus can hide people who are about to cross.",
+    difficulty: 2,
+    tags: ["hazard-prediction", "bus-stop", "pedestrian"],
+    isHazardPrediction: true,
+  },
+  {
+    id: "hazard-009",
+    category: "Hazard Prediction",
+    japanese:
+      "濡れたマンホールや白線の上では、いつもと同じ強さでブレーキをかけても安全である。",
+    naturalEnglish:
+      "On wet manholes or painted lines, normal hard braking is always safe.",
+    examLikeEnglish:
+      "On wet manhole covers or road markings, hard braking is always safe if the rider is traveling slowly.",
+    answer: false,
+    explanationJa:
+      "濡れた金属や白線はすべりやすく、転倒の危険があります。",
+    explanationEn:
+      "Wet metal and paint can be slippery.",
+    difficulty: 2,
+    tags: ["hazard-prediction", "wet-road", "braking"],
+    isHazardPrediction: true,
+  },
+  {
+    id: "hazard-010",
+    category: "Hazard Prediction",
+    japanese:
+      "夕方や雨の日は、周囲から見えにくくなるため早めにライトをつける。",
+    naturalEnglish:
+      "At dusk or in rain, turn on your light early so others can see you.",
+    examLikeEnglish:
+      "At dusk or in rain, a moped rider should use the light early to improve visibility to other road users.",
+    answer: true,
+    explanationJa:
+      "見えにくい時間帯は、自分の存在を知らせることが大切です。",
+    explanationEn:
+      "Lights help others notice you earlier.",
+    difficulty: 1,
+    tags: ["hazard-prediction", "visibility", "light"],
+    isHazardPrediction: true,
+  },
+  {
+    id: "hazard-011",
+    category: "Hazard Prediction",
+    japanese:
+      "大型車のすぐ後ろを走れば、前方の状況が見えなくても安全である。",
+    naturalEnglish:
+      "Following closely behind a large vehicle is safe even if you cannot see ahead.",
+    examLikeEnglish:
+      "A moped may follow closely behind a large vehicle even when the rider cannot see the road ahead.",
+    answer: false,
+    explanationJa:
+      "大型車の後ろでは前方が見えにくく、急な危険に対応しにくくなります。",
+    explanationEn:
+      "A large vehicle can block your view and reduce reaction time.",
+    difficulty: 2,
+    tags: ["hazard-prediction", "large-vehicle", "following-distance"],
+    isHazardPrediction: true,
+  },
+  {
+    id: "railroad-006",
+    category: "Railroad Crossings",
+    japanese:
+      "警報機が鳴っていなくても、踏切の手前では一時停止して安全確認をする。",
+    naturalEnglish:
+      "Even if the alarm is not sounding, stop and check before a railroad crossing.",
+    examLikeEnglish:
+      "Even if the railroad crossing alarm is not sounding, a rider shall stop and confirm safety before entering the crossing.",
+    answer: true,
+    explanationJa:
+      "踏切では、警報の有無にかかわらず一時停止して確認します。",
+    explanationEn:
+      "Railroad crossings require a stop and safety check.",
+    difficulty: 1,
+    tags: ["railroad", "stop", "alarm"],
+  },
+  {
+    id: "railroad-007",
+    category: "Railroad Crossings",
+    japanese:
+      "踏切内で速度が落ちたときは、あわててギアを変えながら進むと安全である。",
+    naturalEnglish:
+      "If you slow down on the tracks, changing gears in a hurry is safe.",
+    examLikeEnglish:
+      "If speed decreases inside a railroad crossing, it is safe for a rider to change gears hurriedly while crossing.",
+    answer: false,
+    explanationJa:
+      "踏切内では止まらないよう、入る前に安全に通過できる状態を整えます。",
+    explanationEn:
+      "Prepare before entering so you can cross smoothly.",
+    difficulty: 2,
+    tags: ["railroad", "control", "gear"],
+  },
+  {
+    id: "railroad-008",
+    category: "Railroad Crossings",
+    japanese:
+      "踏切内で遮断機が下がり始めた場合は、止まらず速やかに踏切の外へ出る。",
+    naturalEnglish:
+      "If the barrier starts lowering while you are on the crossing, leave the crossing quickly.",
+    examLikeEnglish:
+      "If the barrier begins to lower while a moped is within a railroad crossing, the rider should leave the crossing promptly.",
+    answer: true,
+    explanationJa:
+      "踏切内にとどまるのは危険です。すみやかに外へ出ます。",
+    explanationEn:
+      "Do not remain on the tracks. Leave promptly.",
+    difficulty: 2,
+    tags: ["railroad", "barrier", "emergency"],
+  },
+  {
+    id: "helmet-004",
+    category: "Helmet and Safety",
+    japanese:
+      "短い距離だけ運転するときでも、原付ではヘルメットを正しく着用する。",
+    naturalEnglish:
+      "Even for a short ride, wear your helmet properly on a moped.",
+    examLikeEnglish:
+      "A moped rider shall wear a helmet properly even when traveling only a short distance.",
+    answer: true,
+    explanationJa:
+      "短い距離でも事故の危険はあります。ヘルメットを着用します。",
+    explanationEn:
+      "Crashes can happen even on short trips.",
+    difficulty: 1,
+    tags: ["helmet", "short-distance", "safety"],
+  },
+  {
+    id: "helmet-005",
+    category: "Helmet and Safety",
+    japanese:
+      "ヘルメットが少し大きくても、頭に乗っていれば安全である。",
+    naturalEnglish:
+      "A loose helmet is safe as long as it is on your head.",
+    examLikeEnglish:
+      "A helmet that is loose is sufficient for safety if it is placed on the rider's head.",
+    answer: false,
+    explanationJa:
+      "サイズが合わないヘルメットは、転倒時に外れるおそれがあります。",
+    explanationEn:
+      "A loose helmet may come off in a crash.",
+    difficulty: 1,
+    tags: ["helmet", "fit", "safety"],
+  },
+  {
+    id: "helmet-006",
+    category: "Helmet and Safety",
+    japanese:
+      "夜間は、ライトをつけて自分の存在を周囲に知らせる。",
+    naturalEnglish:
+      "At night, use your light so others can see you.",
+    examLikeEnglish:
+      "At night, a moped rider shall use the light so that the moped can be seen by other road users.",
+    answer: true,
+    explanationJa:
+      "夜間は見えにくいため、ライトで自分の存在を知らせます。",
+    explanationEn:
+      "Lights improve your visibility at night.",
+    difficulty: 1,
+    tags: ["light", "night", "safety"],
+  },
+  {
+    id: "speed-007",
+    category: "Speed",
+    japanese:
+      "下り坂で交通の流れが速いときでも、原付は30km/hを超えて走ってはいけない。",
+    naturalEnglish:
+      "Even downhill with fast traffic, a moped must not go over 30 km/h.",
+    examLikeEnglish:
+      "Even on a downhill road where traffic is moving quickly, a moped shall not exceed 30 km/h.",
+    answer: true,
+    explanationJa:
+      "下り坂や交通の流れに関係なく、原付の最高速度を守ります。",
+    explanationEn:
+      "The 30 km/h moped limit still applies.",
+    difficulty: 1,
+    tags: ["speed-limit", "30kmh", "downhill"],
+  },
+  {
+    id: "speed-008",
+    category: "Speed",
+    japanese:
+      "歩行者の多い場所では、制限速度内でもさらに速度を落とすことがある。",
+    naturalEnglish:
+      "In an area with many pedestrians, you may need to slow below the speed limit.",
+    examLikeEnglish:
+      "In an area with many pedestrians, a rider may need to reduce speed even when traveling within the speed limit.",
+    answer: true,
+    explanationJa:
+      "制限速度内でも、周囲の状況に合わせた安全な速度が必要です。",
+    explanationEn:
+      "Safe speed depends on nearby pedestrians and road conditions.",
+    difficulty: 1,
+    tags: ["safe-speed", "pedestrian", "speed-limit"],
+  },
+  {
+    id: "speed-009",
+    category: "Speed",
+    japanese:
+      "試験会場に遅れそうなときは、短い距離だけなら速度超過してもよい。",
+    naturalEnglish:
+      "If you are late, you may speed for a short distance.",
+    examLikeEnglish:
+      "A moped rider may exceed the speed limit for a short distance when the rider is late.",
+    answer: false,
+    explanationJa:
+      "急いでいる理由があっても、速度制限を超えてはいけません。",
+    explanationEn:
+      "Being late is not a reason to exceed the speed limit.",
+    difficulty: 1,
+    tags: ["speed-limit", "trick"],
+  },
+  {
+    id: "speed-010",
+    category: "Speed",
+    japanese:
+      "砂利道や濡れた道路では、同じ速度でも止まるまでの距離が長くなることがある。",
+    naturalEnglish:
+      "On gravel or wet roads, stopping distance can be longer at the same speed.",
+    examLikeEnglish:
+      "On gravel or wet roads, the stopping distance may become longer even at the same speed.",
+    answer: true,
+    explanationJa:
+      "すべりやすい路面では制動距離が長くなるため、速度を落とします。",
+    explanationEn:
+      "Slippery surfaces can increase stopping distance.",
+    difficulty: 2,
+    tags: ["stopping-distance", "wet-road", "safe-speed"],
+  },
 ];
 
 export const getCategoryQuestionCount = (categoryName: string) =>
