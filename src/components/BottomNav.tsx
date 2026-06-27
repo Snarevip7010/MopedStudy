@@ -24,12 +24,12 @@ export function BottomNav() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs font-semibold transition ${
+              className={`flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs font-semibold transition active:scale-[0.98] ${
                 isActive ? "text-emerald-700" : "text-slate-500"
               }`}
             >
               <span
-                className={`grid size-6 place-items-center text-base ${
+                className={`grid h-6 min-w-6 place-items-center text-base ${
                   isActive ? "font-black" : "font-semibold"
                 }`}
                 aria-hidden="true"

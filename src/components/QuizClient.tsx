@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useMemo, useRef, useState, useEffect } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Question, questions } from "@/data/questions";
 import { useProgress } from "@/hooks/useProgress";
 import {
@@ -28,43 +28,59 @@ const formatTime = (seconds: number) => {
   return `${minutes}:${rest.toString().padStart(2, "0")}`;
 };
 
+const answerLabel = (answer: boolean) => (answer ? "TRUE" : "FALSE");
+
 function AnswerButton({
   value,
-  label,
   selected,
   disabled,
   isCorrectAnswer,
   answered,
+  revealCorrectness,
   onSelect,
 }: {
   value: boolean;
-  label: string;
   selected: boolean;
   disabled: boolean;
   isCorrectAnswer: boolean;
   answered: boolean;
+  revealCorrectness: boolean;
   onSelect: (value: boolean) => void;
 }) {
+  const baseClass =
+    "flex min-h-32 flex-col items-center justify-center rounded-2xl border-2 px-3 py-5 text-center shadow-sm transition active:scale-[0.98] disabled:active:scale-100";
   const feedbackClass =
-    answered && selected
+    answered && selected && revealCorrectness
       ? isCorrectAnswer
         ? "border-emerald-500 bg-emerald-50 text-emerald-800"
         : "border-rose-500 bg-rose-50 text-rose-700"
-      : answered && isCorrectAnswer
-        ? "border-emerald-300 bg-white text-emerald-700"
-        : "border-slate-200 bg-white text-slate-800";
+      : answered && selected
+        ? "border-slate-950 bg-slate-100 text-slate-950"
+        : answered && isCorrectAnswer && revealCorrectness
+          ? "border-emerald-300 bg-white text-emerald-700"
+          : answered
+            ? "border-slate-200 bg-white text-slate-400"
+            : "border-slate-200 bg-white text-slate-900";
+  const subText = value
+    ? "This statement is correct"
+    : "This statement is wrong";
 
   return (
     <button
       type="button"
       disabled={disabled}
       onClick={() => onSelect(value)}
-      className={`min-h-24 rounded-lg border-2 p-4 text-left shadow-sm transition active:scale-[0.98] disabled:active:scale-100 ${feedbackClass}`}
+      className={`${baseClass} ${feedbackClass}`}
     >
-      <span className="block text-3xl font-black leading-none">
+      <span className="text-6xl font-black leading-none">
         {value ? "○" : "×"}
       </span>
-      <span className="mt-2 block text-xl font-black">{label}</span>
+      <span className="mt-3 text-2xl font-black leading-none">
+        {answerLabel(value)}
+      </span>
+      <span className="mt-2 text-xs font-bold leading-5 text-current/70">
+        {subText}
+      </span>
     </button>
   );
 }
@@ -74,12 +90,13 @@ export function QuizClient() {
   const modeParam = searchParams.get("mode");
   const mode: QuizMode = isQuizMode(modeParam) ? modeParam : "practice";
   const category = searchParams.get("category") ?? undefined;
+  const seed = searchParams.get("seed") ?? "direct";
   const progress = useProgress();
   const wrongKey = progress.wrongQuestionIds.join("|");
 
   const sessionQuestions = useMemo(() => {
     if (mode === "exam") {
-      return createExamQuestions(questions);
+      return createExamQuestions(questions, seed);
     }
 
     if (mode === "review") {
@@ -90,7 +107,7 @@ export function QuizClient() {
     return category
       ? questions.filter((question) => question.category === category)
       : questions;
-  }, [category, mode, progress.wrongQuestionIds]);
+  }, [category, mode, progress.wrongQuestionIds, seed]);
 
   const backHref = useMemo(() => {
     if (mode === "exam") {
@@ -104,7 +121,7 @@ export function QuizClient() {
     return "/practice";
   }, [mode]);
 
-  const sessionKey = `${mode}:${category ?? "all"}:${wrongKey}`;
+  const sessionKey = `${mode}:${category ?? "all"}:${wrongKey}:${seed}`;
 
   return (
     <QuizRunner
@@ -135,7 +152,8 @@ function QuizRunner({
   const [englishMode, setEnglishMode] = useState<EnglishMode>(
     mode === "exam" ? "exam" : "natural",
   );
-  const [showJapanese, setShowJapanese] = useState(false);
+  const [showQuestionJapanese, setShowQuestionJapanese] = useState(false);
+  const [showExplanationJapanese, setShowExplanationJapanese] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(
     examConfig.durationMinutes * 60,
   );
@@ -143,6 +161,8 @@ function QuizRunner({
 
   const currentQuestion = sessionQuestions[currentIndex];
   const answered = selectedAnswer !== null;
+  const isExam = mode === "exam";
+  const shouldShowFeedback = answered && !isExam;
   const selectedIsCorrect =
     currentQuestion && selectedAnswer === currentQuestion.answer;
   const progressPercent = sessionQuestions.length
@@ -191,7 +211,7 @@ function QuizRunner({
   );
 
   useEffect(() => {
-    if (mode !== "exam" || !sessionQuestions.length || finishing) {
+    if (!isExam || !sessionQuestions.length || finishing) {
       return;
     }
 
@@ -208,7 +228,7 @@ function QuizRunner({
     }, 1000);
 
     return () => window.clearInterval(timer);
-  }, [finishSession, finishing, mode, sessionQuestions.length]);
+  }, [finishSession, finishing, isExam, sessionQuestions.length]);
 
   const handleAnswer = (answer: boolean) => {
     if (!currentQuestion || answered) {
@@ -234,13 +254,14 @@ function QuizRunner({
 
     setCurrentIndex((index) => index + 1);
     setSelectedAnswer(null);
-    setShowJapanese(false);
+    setShowQuestionJapanese(false);
+    setShowExplanationJapanese(false);
   };
 
   if (!sessionQuestions.length) {
     return (
       <main className="min-h-dvh bg-slate-50 px-4 py-8 text-slate-950">
-        <section className="mx-auto max-w-md rounded-lg border border-slate-200 bg-white p-5 text-center">
+        <section className="mx-auto max-w-md rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm">
           <h1 className="text-2xl font-black">No questions found.</h1>
           <p className="mt-3 text-base leading-7 text-slate-600">
             Add questions to this category or answer some questions incorrectly
@@ -248,7 +269,7 @@ function QuizRunner({
           </p>
           <Link
             href={backHref}
-            className="mt-5 block rounded-lg bg-slate-950 px-5 py-4 text-base font-bold text-white"
+            className="mt-5 block min-h-16 rounded-2xl bg-slate-950 px-5 py-5 text-base font-bold text-white active:scale-[0.98]"
           >
             Go Back
           </Link>
@@ -263,12 +284,12 @@ function QuizRunner({
       : currentQuestion.examLikeEnglish;
 
   return (
-    <main className="min-h-dvh bg-slate-50 px-4 pb-64 pt-4 text-slate-950">
-      <div className="mx-auto flex max-w-md flex-col gap-4">
+    <main className="min-h-dvh bg-slate-50 px-4 pb-80 pt-4 text-slate-950">
+      <div className="mx-auto flex max-w-md flex-col gap-5">
         <header className="flex items-center justify-between gap-3">
           <Link
             href={backHref}
-            className="rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm font-bold text-slate-700"
+            className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-bold text-slate-700 active:scale-[0.98]"
           >
             Back
           </Link>
@@ -276,7 +297,7 @@ function QuizRunner({
             <p className="text-sm font-bold text-slate-500">
               {currentIndex + 1} / {sessionQuestions.length}
             </p>
-            {mode === "exam" ? (
+            {isExam ? (
               <p className="text-lg font-black text-emerald-700">
                 {formatTime(secondsLeft)}
               </p>
@@ -284,14 +305,14 @@ function QuizRunner({
           </div>
         </header>
 
-        <div className="h-2 overflow-hidden rounded-full bg-slate-200">
+        <div className="h-2.5 overflow-hidden rounded-full bg-slate-200">
           <div
             className="h-full rounded-full bg-emerald-500 transition-all"
             style={{ width: `${progressPercent}%` }}
           />
         </div>
 
-        <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+        <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
           <div className="flex items-start justify-between gap-3">
             <div>
               <p className="text-xs font-bold uppercase tracking-wide text-slate-400">
@@ -299,62 +320,72 @@ function QuizRunner({
               </p>
               {currentQuestion.isHazardPrediction ? (
                 <p className="mt-1 text-sm font-bold text-amber-700">
-                  Hazard prediction • 2 points
+                  Hazard prediction / 2 points
                 </p>
               ) : null}
             </div>
-            <span className="rounded-md bg-slate-100 px-2.5 py-1 text-sm font-bold text-slate-600">
+            <span className="rounded-xl bg-slate-100 px-3 py-1.5 text-sm font-bold text-slate-600">
               Lv.{currentQuestion.difficulty}
             </span>
           </div>
 
-          <div className="mt-5 grid grid-cols-2 gap-2 rounded-lg bg-slate-100 p-1">
-            <button
-              type="button"
-              onClick={() => setEnglishMode("natural")}
-              className={`rounded-md px-3 py-3 text-sm font-bold ${
-                englishMode === "natural"
-                  ? "bg-white text-slate-950 shadow-sm"
-                  : "text-slate-500"
-              }`}
-            >
-              Natural English
-            </button>
-            <button
-              type="button"
-              onClick={() => setEnglishMode("exam")}
-              className={`rounded-md px-3 py-3 text-sm font-bold ${
-                englishMode === "exam"
-                  ? "bg-white text-slate-950 shadow-sm"
-                  : "text-slate-500"
-              }`}
-            >
-              Exam-like English
-            </button>
-          </div>
+          {isExam ? (
+            <p className="mt-5 rounded-2xl bg-slate-100 px-4 py-3 text-sm font-bold text-slate-600">
+              Mock Exam: Exam-like English only
+            </p>
+          ) : (
+            <div className="mt-5 grid grid-cols-2 gap-2 rounded-2xl bg-slate-100 p-1">
+              <button
+                type="button"
+                onClick={() => setEnglishMode("natural")}
+                className={`rounded-xl px-3 py-3 text-sm font-bold active:scale-[0.98] ${
+                  englishMode === "natural"
+                    ? "bg-white text-slate-950 shadow-sm"
+                    : "text-slate-500"
+                }`}
+              >
+                Natural English
+              </button>
+              <button
+                type="button"
+                onClick={() => setEnglishMode("exam")}
+                className={`rounded-xl px-3 py-3 text-sm font-bold active:scale-[0.98] ${
+                  englishMode === "exam"
+                    ? "bg-white text-slate-950 shadow-sm"
+                    : "text-slate-500"
+                }`}
+              >
+                Exam-like English
+              </button>
+            </div>
+          )}
 
           <h1 className="mt-6 text-2xl font-black leading-snug">
             {questionText}
           </h1>
 
-          <button
-            type="button"
-            onClick={() => setShowJapanese((value) => !value)}
-            className="mt-5 rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm font-bold text-slate-700"
-          >
-            {showJapanese ? "Hide Japanese" : "Show Japanese"}
-          </button>
+          {!isExam ? (
+            <>
+              <button
+                type="button"
+                onClick={() => setShowQuestionJapanese((value) => !value)}
+                className="mt-5 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-bold text-slate-700 active:scale-[0.98]"
+              >
+                {showQuestionJapanese ? "Hide Japanese" : "Show Japanese"}
+              </button>
 
-          {showJapanese ? (
-            <p className="mt-4 rounded-lg bg-slate-50 p-4 text-base font-semibold leading-7 text-slate-700">
-              {currentQuestion.japanese}
-            </p>
+              {showQuestionJapanese ? (
+                <p className="mt-4 rounded-2xl bg-slate-50 p-4 text-base font-semibold leading-7 text-slate-700">
+                  {currentQuestion.japanese}
+                </p>
+              ) : null}
+            </>
           ) : null}
         </section>
 
-        {answered ? (
+        {shouldShowFeedback ? (
           <section
-            className={`rounded-lg border p-5 shadow-sm ${
+            className={`rounded-2xl border p-6 shadow-sm ${
               selectedIsCorrect
                 ? "border-emerald-200 bg-emerald-50"
                 : "border-rose-200 bg-rose-50"
@@ -365,20 +396,40 @@ function QuizRunner({
                 selectedIsCorrect ? "text-emerald-800" : "text-rose-700"
               }`}
             >
-              {selectedIsCorrect ? "Correct!" : "Incorrect"}
+              {selectedIsCorrect ? "✅ Correct!" : "❌ Incorrect"}
             </p>
-            <p className="mt-4 text-base font-semibold leading-7 text-slate-800">
-              {currentQuestion.explanationEn}
+            <p
+              className={`mt-2 text-lg font-bold ${
+                selectedIsCorrect ? "text-emerald-700" : "text-rose-700"
+              }`}
+            >
+              {selectedIsCorrect ? "Good job." : "Remember this rule."}
             </p>
-            {showJapanese ? (
-              <p className="mt-3 border-t border-white/80 pt-3 text-sm font-semibold leading-6 text-slate-600">
-                {currentQuestion.explanationJa}
+            <p className="mt-4 rounded-2xl bg-white/70 px-4 py-3 text-base font-black text-slate-800">
+              Correct answer: {answerLabel(currentQuestion.answer)}
+            </p>
+            <div className="mt-5">
+              <h2 className="text-sm font-black uppercase tracking-wide text-slate-500">
+                Explanation
+              </h2>
+              <p className="mt-2 text-base font-semibold leading-7 text-slate-800">
+                {currentQuestion.explanationEn}
               </p>
+            </div>
+            {showExplanationJapanese ? (
+              <div className="mt-4 border-t border-white/80 pt-4">
+                <h3 className="text-sm font-black uppercase tracking-wide text-slate-500">
+                  Japanese explanation
+                </h3>
+                <p className="mt-2 text-sm font-semibold leading-6 text-slate-600">
+                  {currentQuestion.explanationJa}
+                </p>
+              </div>
             ) : (
               <button
                 type="button"
-                onClick={() => setShowJapanese(true)}
-                className="mt-4 rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm font-bold text-slate-700"
+                onClick={() => setShowExplanationJapanese(true)}
+                className="mt-5 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-bold text-slate-700 active:scale-[0.98]"
               >
                 Show Japanese explanation
               </button>
@@ -392,19 +443,19 @@ function QuizRunner({
           <div className="grid grid-cols-2 gap-3">
             <AnswerButton
               value={true}
-              label="TRUE"
               selected={selectedAnswer === true}
               disabled={answered}
               answered={answered}
+              revealCorrectness={!isExam}
               isCorrectAnswer={currentQuestion.answer === true}
               onSelect={handleAnswer}
             />
             <AnswerButton
               value={false}
-              label="FALSE"
               selected={selectedAnswer === false}
               disabled={answered}
               answered={answered}
+              revealCorrectness={!isExam}
               isCorrectAnswer={currentQuestion.answer === false}
               onSelect={handleAnswer}
             />
@@ -413,7 +464,7 @@ function QuizRunner({
             <button
               type="button"
               onClick={handleNext}
-              className="min-h-14 rounded-lg bg-slate-950 px-5 py-4 text-lg font-black text-white"
+              className="min-h-16 rounded-2xl bg-slate-950 px-5 py-4 text-lg font-black text-white active:scale-[0.98]"
             >
               {currentIndex + 1 >= sessionQuestions.length
                 ? "See Result"
