@@ -1,11 +1,62 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo } from "react";
-import { questions } from "@/data/questions";
+import { useMemo, useState } from "react";
+import { Question, questions } from "@/data/questions";
 import { useProgress } from "@/hooks/useProgress";
 
 const answerLabel = (answer: boolean) => (answer ? "TRUE" : "FALSE");
+
+function MistakeNoteCard({ question }: { question: Question }) {
+  const [showJapanese, setShowJapanese] = useState(false);
+
+  return (
+    <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <div className="flex items-start justify-between gap-3">
+        <p className="text-xs font-bold uppercase tracking-wide text-slate-400">
+          {question.category}
+        </p>
+        <span className="rounded-xl bg-rose-50 px-3 py-1 text-xs font-black text-rose-700">
+          Note
+        </span>
+      </div>
+      <p className="mt-3 text-lg font-black leading-7">
+        {question.naturalEnglish}
+      </p>
+      <p className="mt-4 rounded-2xl bg-emerald-50 px-4 py-3 text-base font-black text-emerald-800">
+        Correct answer: {answerLabel(question.answer)}
+      </p>
+      <p className="mt-3 text-sm font-semibold leading-6 text-slate-600">
+        {question.explanationEn}
+      </p>
+
+      {showJapanese ? (
+        <div className="mt-4 rounded-2xl bg-slate-50 p-4">
+          <h3 className="text-sm font-black uppercase tracking-wide text-slate-500">
+            Japanese question
+          </h3>
+          <p className="mt-2 text-sm font-semibold leading-6 text-slate-700">
+            {question.japanese}
+          </p>
+          <h3 className="mt-4 border-t border-slate-200 pt-4 text-sm font-black uppercase tracking-wide text-slate-500">
+            Japanese explanation
+          </h3>
+          <p className="mt-2 text-sm font-semibold leading-6 text-slate-600">
+            {question.explanationJa}
+          </p>
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={() => setShowJapanese(true)}
+          className="mt-4 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-bold text-slate-700 active:scale-[0.98]"
+        >
+          Show Japanese
+        </button>
+      )}
+    </article>
+  );
+}
 
 export function ReviewMistakes() {
   const progress = useProgress();
@@ -48,28 +99,7 @@ export function ReviewMistakes() {
       {wrongQuestions.length ? (
         <section className="grid gap-3">
           {wrongQuestions.map((question) => (
-            <article
-              key={question.id}
-              className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
-            >
-              <div className="flex items-start justify-between gap-3">
-                <p className="text-xs font-bold uppercase tracking-wide text-slate-400">
-                  {question.category}
-                </p>
-                <span className="rounded-xl bg-rose-50 px-3 py-1 text-xs font-black text-rose-700">
-                  Note
-                </span>
-              </div>
-              <p className="mt-3 text-lg font-black leading-7">
-                {question.naturalEnglish}
-              </p>
-              <p className="mt-4 rounded-2xl bg-emerald-50 px-4 py-3 text-base font-black text-emerald-800">
-                Correct answer: {answerLabel(question.answer)}
-              </p>
-              <p className="mt-3 text-sm font-semibold leading-6 text-slate-600">
-                {question.explanationEn}
-              </p>
-            </article>
+            <MistakeNoteCard key={question.id} question={question} />
           ))}
         </section>
       ) : (

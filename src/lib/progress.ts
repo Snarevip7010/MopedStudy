@@ -11,6 +11,7 @@ export type PracticeHistoryEntry = {
   category?: string;
   questionIds: string[];
   wrongQuestionIds: string[];
+  answers: AnswerMap;
   correctAnswers: number;
   totalQuestions: number;
   score?: number;
@@ -48,13 +49,39 @@ export const examConfig = {
 
 const unique = (values: string[]) => Array.from(new Set(values));
 
+function normalizeProgressState(value: unknown): ProgressState {
+  if (!value || typeof value !== "object") {
+    return emptyProgress;
+  }
+
+  const parsed = value as Partial<ProgressState>;
+  const practiceHistory = Array.isArray(parsed.practiceHistory)
+    ? parsed.practiceHistory.map((entry) => ({
+        ...entry,
+        answers: entry.answers ?? {},
+      }))
+    : [];
+
+  return {
+    ...emptyProgress,
+    ...parsed,
+    answeredQuestionIds: Array.isArray(parsed.answeredQuestionIds)
+      ? parsed.answeredQuestionIds
+      : [],
+    wrongQuestionIds: Array.isArray(parsed.wrongQuestionIds)
+      ? parsed.wrongQuestionIds
+      : [],
+    practiceHistory,
+  };
+}
+
 export function parseProgressSnapshot(stored: string | null): ProgressState {
   if (!stored) {
     return emptyProgress;
   }
 
   try {
-    return { ...emptyProgress, ...JSON.parse(stored) };
+    return normalizeProgressState(JSON.parse(stored));
   } catch {
     return emptyProgress;
   }
@@ -149,6 +176,7 @@ export function createResultEntry({
     category,
     questionIds: sessionQuestions.map((question) => question.id),
     wrongQuestionIds,
+    answers,
     correctAnswers,
     totalQuestions: sessionQuestions.length,
   };
@@ -228,4 +256,8 @@ export function createExamQuestions(source: Question[], seed = "default") {
     0,
     examConfig.totalQuestions,
   );
+}
+
+export function createPracticeQuestions(source: Question[], seed = "default") {
+  return shuffleWithSeed(source, `${seed}:practice`);
 }

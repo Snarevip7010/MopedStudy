@@ -8,6 +8,7 @@ import { useProgress } from "@/hooks/useProgress";
 import {
   AnswerMap,
   createExamQuestions,
+  createPracticeQuestions,
   createResultEntry,
   examConfig,
   loadProgress,
@@ -29,6 +30,14 @@ const formatTime = (seconds: number) => {
 };
 
 const answerLabel = (answer: boolean) => (answer ? "TRUE" : "FALSE");
+
+function createSessionSeed() {
+  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
+    return crypto.randomUUID();
+  }
+
+  return `${Date.now()}-${Math.random()}`;
+}
 
 function AnswerButton({
   value,
@@ -90,7 +99,8 @@ export function QuizClient() {
   const modeParam = searchParams.get("mode");
   const mode: QuizMode = isQuizMode(modeParam) ? modeParam : "practice";
   const category = searchParams.get("category") ?? undefined;
-  const seed = searchParams.get("seed") ?? "direct";
+  const [fallbackSeed] = useState(createSessionSeed);
+  const seed = searchParams.get("seed") ?? fallbackSeed;
   const progress = useProgress();
   const wrongKey = progress.wrongQuestionIds.join("|");
 
@@ -104,9 +114,11 @@ export function QuizClient() {
       return questions.filter((question) => wrongSet.has(question.id));
     }
 
-    return category
+    const practiceQuestions = category
       ? questions.filter((question) => question.category === category)
       : questions;
+
+    return createPracticeQuestions(practiceQuestions, seed);
   }, [category, mode, progress.wrongQuestionIds, seed]);
 
   const backHref = useMemo(() => {
@@ -147,6 +159,7 @@ function QuizRunner({
 }) {
   const router = useRouter();
   const answersRef = useRef<AnswerMap>({});
+  const finishingRef = useRef(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<boolean | null>(null);
   const [englishMode, setEnglishMode] = useState<EnglishMode>(
@@ -171,10 +184,11 @@ function QuizRunner({
 
   const finishSession = useCallback(
     (finalAnswers: AnswerMap) => {
-      if (!sessionQuestions.length || finishing) {
+      if (!sessionQuestions.length || finishingRef.current) {
         return;
       }
 
+      finishingRef.current = true;
       setFinishing(true);
 
       let nextProgress = loadProgress();
@@ -207,7 +221,7 @@ function QuizRunner({
       saveProgress(nextProgress);
       router.push(`/result?id=${entry.id}`);
     },
-    [category, finishing, mode, router, sessionQuestions],
+    [category, mode, router, sessionQuestions],
   );
 
   useEffect(() => {
@@ -231,7 +245,7 @@ function QuizRunner({
   }, [finishSession, finishing, isExam, sessionQuestions.length]);
 
   const handleAnswer = (answer: boolean) => {
-    if (!currentQuestion || answered) {
+    if (!currentQuestion || answered || finishing) {
       return;
     }
 
@@ -243,7 +257,7 @@ function QuizRunner({
   };
 
   const handleNext = () => {
-    if (!currentQuestion || selectedAnswer === null) {
+    if (!currentQuestion || selectedAnswer === null || finishing) {
       return;
     }
 
@@ -256,6 +270,16 @@ function QuizRunner({
     setSelectedAnswer(null);
     setShowQuestionJapanese(false);
     setShowExplanationJapanese(false);
+  };
+
+  const handleExitExam = () => {
+    const shouldExit = window.confirm(
+      "Are you sure you want to quit this exam?\nYour answers will not be saved.",
+    );
+
+    if (shouldExit) {
+      router.push("/exam");
+    }
   };
 
   if (!sessionQuestions.length) {
@@ -287,12 +311,22 @@ function QuizRunner({
     <main className="min-h-dvh bg-slate-50 px-4 pb-80 pt-4 text-slate-950">
       <div className="mx-auto flex max-w-md flex-col gap-5">
         <header className="flex items-center justify-between gap-3">
-          <Link
-            href={backHref}
-            className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-bold text-slate-700 active:scale-[0.98]"
-          >
-            Back
-          </Link>
+          {isExam ? (
+            <button
+              type="button"
+              onClick={handleExitExam}
+              className="rounded-2xl border border-rose-200 bg-white px-4 py-3 text-sm font-bold text-rose-700 active:scale-[0.98]"
+            >
+              Exit Exam
+            </button>
+          ) : (
+            <Link
+              href={backHref}
+              className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-bold text-slate-700 active:scale-[0.98]"
+            >
+              Back
+            </Link>
+          )}
           <div className="text-right">
             <p className="text-sm font-bold text-slate-500">
               {currentIndex + 1} / {sessionQuestions.length}
@@ -444,7 +478,7 @@ function QuizRunner({
             <AnswerButton
               value={true}
               selected={selectedAnswer === true}
-              disabled={answered}
+              disabled={answered || finishing}
               answered={answered}
               revealCorrectness={!isExam}
               isCorrectAnswer={currentQuestion.answer === true}
@@ -453,7 +487,7 @@ function QuizRunner({
             <AnswerButton
               value={false}
               selected={selectedAnswer === false}
-              disabled={answered}
+              disabled={answered || finishing}
               answered={answered}
               revealCorrectness={!isExam}
               isCorrectAnswer={currentQuestion.answer === false}
@@ -464,11 +498,14 @@ function QuizRunner({
             <button
               type="button"
               onClick={handleNext}
-              className="min-h-16 rounded-2xl bg-slate-950 px-5 py-4 text-lg font-black text-white active:scale-[0.98]"
+              disabled={finishing}
+              className="min-h-16 rounded-2xl bg-slate-950 px-5 py-4 text-lg font-black text-white active:scale-[0.98] disabled:opacity-60 disabled:active:scale-100"
             >
-              {currentIndex + 1 >= sessionQuestions.length
-                ? "See Result"
-                : "Next"}
+              {finishing
+                ? "Saving..."
+                : currentIndex + 1 >= sessionQuestions.length
+                  ? "See Result"
+                  : "Next"}
             </button>
           ) : null}
         </div>

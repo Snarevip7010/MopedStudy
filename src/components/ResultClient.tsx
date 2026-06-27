@@ -8,9 +8,21 @@ import { Question, questions } from "@/data/questions";
 import { useProgress } from "@/hooks/useProgress";
 import { examConfig } from "@/lib/progress";
 
-const answerLabel = (answer: boolean) => (answer ? "TRUE" : "FALSE");
+const answerLabel = (answer: boolean | undefined) => {
+  if (answer === undefined) {
+    return "No answer";
+  }
 
-function WrongQuestionCard({ question }: { question: Question }) {
+  return answer ? "TRUE" : "FALSE";
+};
+
+function WrongQuestionCard({
+  question,
+  yourAnswer,
+}: {
+  question: Question;
+  yourAnswer?: boolean;
+}) {
   const [showJapanese, setShowJapanese] = useState(false);
 
   return (
@@ -26,9 +38,14 @@ function WrongQuestionCard({ question }: { question: Question }) {
       <p className="mt-3 text-lg font-black leading-7">
         {question.examLikeEnglish}
       </p>
-      <p className="mt-4 rounded-2xl bg-emerald-50 px-4 py-3 text-base font-black text-emerald-800">
-        Correct answer: {answerLabel(question.answer)}
-      </p>
+      <div className="mt-4 grid gap-2">
+        <p className="rounded-2xl bg-rose-50 px-4 py-3 text-base font-black text-rose-700">
+          Your answer: {answerLabel(yourAnswer)}
+        </p>
+        <p className="rounded-2xl bg-emerald-50 px-4 py-3 text-base font-black text-emerald-800">
+          Correct answer: {answerLabel(question.answer)}
+        </p>
+      </div>
       <div className="mt-4">
         <h3 className="text-sm font-black uppercase tracking-wide text-slate-500">
           Explanation
@@ -202,7 +219,11 @@ export function ResultClient() {
       {wrongQuestions.length ? (
         <section className="grid gap-3">
           {wrongQuestions.map((question) => (
-            <WrongQuestionCard key={question.id} question={question} />
+            <WrongQuestionCard
+              key={question.id}
+              question={question}
+              yourAnswer={result.answers?.[question.id]}
+            />
           ))}
         </section>
       ) : (
