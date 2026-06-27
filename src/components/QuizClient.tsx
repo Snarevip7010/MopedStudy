@@ -115,7 +115,11 @@ export function QuizClient() {
     }
 
     const practiceQuestions = category
-      ? questions.filter((question) => question.category === category)
+      ? questions.filter((question) =>
+          category === "Hazard Prediction"
+            ? question.isHazardPrediction
+            : question.category === category,
+        )
       : questions;
 
     return createPracticeQuestions(practiceQuestions, seed);

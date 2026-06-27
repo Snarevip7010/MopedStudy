@@ -940,7 +940,11 @@ export const questions: Question[] = [
 ];
 
 export const getCategoryQuestionCount = (categoryName: string) =>
-  questions.filter((question) => question.category === categoryName).length;
+  questions.filter((question) =>
+    categoryName === "Hazard Prediction"
+      ? question.isHazardPrediction
+      : question.category === categoryName,
+  ).length;
 
 export const getQuestionPoint = (question: Question) =>
   question.isHazardPrediction ? 2 : 1;
